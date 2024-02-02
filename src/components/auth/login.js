@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { SignInSchema } from '../../utils/validation';
 import ApiRequest from '../../utils/axioInterceptor';
@@ -17,6 +18,7 @@ const Login = () => {
 		resolver: yupResolver(SignInSchema),
 	});
 	const [err, setErr] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
 	const onSubmit = async (data) => {
 		try {
 			setErr('');
@@ -75,20 +77,21 @@ const Login = () => {
 								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Email address"
 							/>
+
 							{errors?.email && (
 								<p className="text-red-500 text-xs mt-1">
 									{errors?.email?.message}
 								</p>
 							)}
 						</div>
-						<div>
+						<div className="relative">
 							<label htmlFor="password" className="sr-only">
 								Password
 							</label>
 							<input
 								id="password"
 								name="password"
-								type="password"
+								type={showPassword ? 'text' : 'password'}
 								autoComplete="current-password"
 								{...register('password')}
 								className={`appearance-none rounded relative block w-full px-3 mt-5 py-2 border ${
@@ -96,6 +99,14 @@ const Login = () => {
 								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Password"
 							/>
+							<div
+								className={`absolute ${
+									errors?.password ? 'top-[10px]' : 'inset-y-0'
+								} right-0 pr-3 flex items-center cursor-pointer z-10`}
+								onClick={() => setShowPassword(!showPassword)}
+							>
+								{showPassword ? <FaEye /> : <FaEyeSlash />}
+							</div>
 							{errors?.password && (
 								<p className="text-red-500 text-xs mt-1">
 									{errors?.password?.message}
@@ -112,9 +123,13 @@ const Login = () => {
 						</button>
 					</div>
 				</form>
-				<div className="flex justify-center">
-					<p className="text-red-500">{err}</p>
-				</div>
+				{err.length > 0 ? (
+					<div className="flex justify-center">
+						<p className="text-red-500">{err}</p>
+					</div>
+				) : (
+					''
+				)}
 				<div className="flex justify-center">
 					<p>Dont have an account?</p> &nbsp;&nbsp;
 					<a href="/signup">Sign up</a>

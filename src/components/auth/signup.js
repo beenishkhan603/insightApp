@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { SignUpSchema } from '../../utils/validation';
 import ApiRequest from '../../utils/axioInterceptor';
@@ -17,6 +18,9 @@ const SignUp = () => {
 		resolver: yupResolver(SignUpSchema),
 	});
 	const [err, setErr] = useState('');
+	const [showPassword, setShowPassword] = useState(false);
+	const [showConfrimPassword, setShowConfrimPassword] = useState(false);
+
 	const onSubmit = async (data) => {
 		try {
 			setErr('');
@@ -36,8 +40,11 @@ const SignUp = () => {
 				}
 			}
 		} catch (e) {
-			setErr('Something went worng. Please try again later');
-			reset();
+			if (e?.response?.data?.message) {
+				setErr(e?.response?.data?.message);
+			} else {
+				setErr('Something went worng. Please try again later');
+			}
 		}
 	};
 	useEffect(() => {
@@ -63,17 +70,17 @@ const SignUp = () => {
 							</label>
 							<input
 								id="first-name"
-								name="firstname"
+								name="firstName"
 								type="text"
-								{...register('firstname')}
+								{...register('firstName')}
 								className={`appearance-none rounded relative block w-full px-3 py-2 mt-5 border ${
-									errors?.firstname ? 'border-red-500' : 'border-gray-300'
+									errors?.firstName ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Frist name"
 							/>
-							{errors?.firstname && (
+							{errors?.firstName && (
 								<p className="text-red-500 text-xs mt-1">
-									{errors?.firstname?.message}
+									{errors?.firstName?.message}
 								</p>
 							)}
 						</div>
@@ -83,17 +90,17 @@ const SignUp = () => {
 							</label>
 							<input
 								id="last-name"
-								name="lastname"
+								name="lastName"
 								type="text"
-								{...register('lastname')}
+								{...register('lastName')}
 								className={`appearance-none rounded relative block w-full px-3 py-2 mt-5 border ${
-									errors?.lastname ? 'border-red-500' : 'border-gray-300'
+									errors?.lastName ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Last name"
 							/>
-							{errors?.lastname && (
+							{errors?.lastName && (
 								<p className="text-red-500 text-xs mt-1">
-									{errors?.lastname?.message}
+									{errors?.lastName?.message}
 								</p>
 							)}
 						</div>
@@ -117,14 +124,14 @@ const SignUp = () => {
 								</p>
 							)}
 						</div>
-						<div>
+						<div className="relative">
 							<label htmlFor="password" className="sr-only">
 								Password
 							</label>
 							<input
 								id="password"
 								name="password"
-								type="password"
+								type={showPassword ? 'text' : 'password'}
 								autoComplete="current-password"
 								{...register('password')}
 								className={`appearance-none rounded relative block w-full px-3 mt-5 py-2 border ${
@@ -132,20 +139,29 @@ const SignUp = () => {
 								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Password"
 							/>
+							<div
+								className={`absolute ${
+									errors?.password ? 'top-[10px]' : 'inset-y-0'
+								} right-0 pr-3 flex items-center cursor-pointer z-10`}
+								onClick={() => setShowPassword(!showPassword)}
+							>
+								{showPassword ? <FaEye /> : <FaEyeSlash />}
+							</div>
 							{errors?.password && (
 								<p className="text-red-500 text-xs mt-1">
 									{errors?.password?.message}
 								</p>
 							)}
 						</div>
-						<div>
+
+						<div className="relative">
 							<label htmlFor="confirmPassword" className="sr-only">
 								Confirm Password
 							</label>
 							<input
 								id="confirmPassword"
 								name="confirmPassword"
-								type="password"
+								type={showConfrimPassword ? 'text' : 'password'}
 								autoComplete="current-password"
 								{...register('confirmPassword')}
 								className={`appearance-none rounded relative block w-full px-3 mt-5 py-2 border ${
@@ -153,6 +169,14 @@ const SignUp = () => {
 								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Confirm Password"
 							/>
+							<div
+								className={`absolute ${
+									errors?.confirmPassword ? 'top-[10px]' : 'inset-y-0'
+								} right-0 pr-3 flex items-center cursor-pointer z-10`}
+								onClick={() => setShowConfrimPassword(!showConfrimPassword)}
+							>
+								{showConfrimPassword ? <FaEye /> : <FaEyeSlash />}
+							</div>
 							{errors?.confirmPassword && (
 								<p className="text-red-500 text-xs mt-1">
 									{errors?.confirmPassword?.message}
@@ -169,9 +193,13 @@ const SignUp = () => {
 						</button>
 					</div>
 				</form>
-				<div className="flex justify-center">
-					<p className="text-red-500">{err}</p>
-				</div>
+				{err.length > 0 ? (
+					<div className="flex justify-center">
+						<p className="text-red-500">{err}</p>
+					</div>
+				) : (
+					''
+				)}
 				<div className="flex justify-center">
 					<p>Already have an account?</p>&nbsp;&nbsp;
 					<a href="/login">Login</a>
