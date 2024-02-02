@@ -37,9 +37,9 @@ const Login = () => {
 								name="email"
 								type="email"
 								{...register('email')}
-								className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+								className={`appearance-none rounded relative block w-full px-3 py-2 my-5 border ${
 									errors?.email ? 'border-red-500' : 'border-gray-300'
-								} placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Email address"
 							/>
 							{errors?.email && (
@@ -58,9 +58,9 @@ const Login = () => {
 								type="password"
 								autoComplete="current-password"
 								{...register('password')}
-								className={`appearance-none rounded-none relative block w-full px-3 py-2 border ${
+								className={`appearance-none rounded relative block w-full px-3 my-5 py-2 border ${
 									errors?.password ? 'border-red-500' : 'border-gray-300'
-								} placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Password"
 							/>
 							{errors?.password && (
@@ -80,7 +80,7 @@ const Login = () => {
 					</div>
 				</form>
 				<div className="flex justify-center">
-					<p>Dont have an account?</p>
+					<p>Dont have an account?</p> &nbsp;&nbsp;
 					<a href="/signup">Sign up</a>
 				</div>
 			</div>
