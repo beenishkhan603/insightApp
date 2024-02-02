@@ -8,16 +8,16 @@ const SignUpSchema = Yup.object().shape({
 			/^([a-zA-Z0-9._%-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,})$/,
 			'Email must be a valid'
 		),
-	// firstName: Yup.string()
-	// 	.required('First name is required')
-	// 	.min(2, 'Too Short!')
-	// 	.max(50, 'Too Long!')
-	// 	.matches(/^(?![\s])(.*)/, 'Space at start are not allowed'),
-	// lastName: Yup.string()
-	// 	.required('Last name is required')
-	// 	.min(2, 'Too Short!')
-	// 	.max(50, 'Too Long!')
-	// 	.matches(/^(?![\s])(.*)/, 'Space at start are not allowed'),
+	firstName: Yup.string()
+		.required('First name is required')
+		.min(2, 'Too Short!')
+		.max(50, 'Too Long!')
+		.matches(/^(?![\s])(.*)/, 'Space at start are not allowed'),
+	lastName: Yup.string()
+		.required('Last name is required')
+		.min(2, 'Too Short!')
+		.max(50, 'Too Long!')
+		.matches(/^(?![\s])(.*)/, 'Space at start are not allowed'),
 	password: Yup.string()
 		.required('Password is required')
 		.matches(

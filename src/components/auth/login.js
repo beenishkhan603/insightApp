@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 
 import { SignInSchema } from '../../utils/validation';
+import ApiRequest from '../../utils/axioInterceptor';
 
 const Login = () => {
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -13,10 +16,40 @@ const Login = () => {
 	} = useForm({
 		resolver: yupResolver(SignInSchema),
 	});
-	const onSubmit = (data) => {
-		console.log(data);
-		reset();
+	const [err, setErr] = useState('');
+	const onSubmit = async (data) => {
+		try {
+			setErr('');
+			const response = await ApiRequest.post(
+				`${process.env.REACT_APP_BACKEND_URL}/login`,
+				data
+			);
+			if (response) {
+				const { data } = response;
+				if (data) {
+					const { success, message, accessToken } = data;
+					if (success) {
+						reset();
+						localStorage.setItem('token', accessToken);
+						navigate('/dashboard');
+					} else {
+						setErr(message);
+					}
+				}
+			}
+		} catch (e) {
+			setErr('Something went worng. Please try again later');
+			reset();
+		}
 	};
+
+	useEffect(() => {
+		// Check if the user has a valid access token
+		const accessToken = localStorage.getItem('token');
+		if (accessToken) {
+			navigate('/dashboard'); // Redirect to the dashboard if a valid token exists
+		}
+	}, []);
 
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -37,7 +70,7 @@ const Login = () => {
 								name="email"
 								type="email"
 								{...register('email')}
-								className={`appearance-none rounded relative block w-full px-3 py-2 my-5 border ${
+								className={`appearance-none rounded relative block w-full px-3 py-2 mt-5 border ${
 									errors?.email ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Email address"
@@ -58,7 +91,7 @@ const Login = () => {
 								type="password"
 								autoComplete="current-password"
 								{...register('password')}
-								className={`appearance-none rounded relative block w-full px-3 my-5 py-2 border ${
+								className={`appearance-none rounded relative block w-full px-3 mt-5 py-2 border ${
 									errors?.password ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Password"
@@ -79,6 +112,9 @@ const Login = () => {
 						</button>
 					</div>
 				</form>
+				<div className="flex justify-center">
+					<p className="text-red-500">{err}</p>
+				</div>
 				<div className="flex justify-center">
 					<p>Dont have an account?</p> &nbsp;&nbsp;
 					<a href="/signup">Sign up</a>

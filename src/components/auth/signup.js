@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
 
 import { SignUpSchema } from '../../utils/validation';
+import ApiRequest from '../../utils/axioInterceptor';
 
 const SignUp = () => {
+	const navigate = useNavigate();
 	const {
 		register,
 		handleSubmit,
@@ -13,11 +16,37 @@ const SignUp = () => {
 	} = useForm({
 		resolver: yupResolver(SignUpSchema),
 	});
-	const onSubmit = (data) => {
-		console.log(data);
-		reset();
+	const [err, setErr] = useState('');
+	const onSubmit = async (data) => {
+		try {
+			setErr('');
+			const response = await ApiRequest.post(
+				`${process.env.REACT_APP_BACKEND_URL}/signup`,
+				data
+			);
+			if (response) {
+				const { data } = response;
+				if (data) {
+					const { success, message } = data;
+					if (success) {
+						reset();
+					} else {
+						setErr(message);
+					}
+				}
+			}
+		} catch (e) {
+			setErr('Something went worng. Please try again later');
+			reset();
+		}
 	};
-
+	useEffect(() => {
+		// Check if the user has a valid access token
+		const accessToken = localStorage.getItem('token');
+		if (accessToken) {
+			navigate('/dashboard'); // Redirect to the dashboard if a valid token exists
+		}
+	}, []);
 	return (
 		<div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-md w-full space-y-8">
@@ -29,6 +58,46 @@ const SignUp = () => {
 				<form className="mt-8 space-y-6" onSubmit={handleSubmit(onSubmit)}>
 					<div className="rounded-md shadow-sm -space-y-px">
 						<div>
+							<label htmlFor="first-name" className="sr-only">
+								Frist name
+							</label>
+							<input
+								id="first-name"
+								name="firstname"
+								type="text"
+								{...register('firstname')}
+								className={`appearance-none rounded relative block w-full px-3 py-2 mt-5 border ${
+									errors?.firstname ? 'border-red-500' : 'border-gray-300'
+								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+								placeholder="Frist name"
+							/>
+							{errors?.firstname && (
+								<p className="text-red-500 text-xs mt-1">
+									{errors?.firstname?.message}
+								</p>
+							)}
+						</div>
+						<div>
+							<label htmlFor="last-name" className="sr-only">
+								Last name
+							</label>
+							<input
+								id="last-name"
+								name="lastname"
+								type="text"
+								{...register('lastname')}
+								className={`appearance-none rounded relative block w-full px-3 py-2 mt-5 border ${
+									errors?.lastname ? 'border-red-500' : 'border-gray-300'
+								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
+								placeholder="Last name"
+							/>
+							{errors?.lastname && (
+								<p className="text-red-500 text-xs mt-1">
+									{errors?.lastname?.message}
+								</p>
+							)}
+						</div>
+						<div>
 							<label htmlFor="email-address" className="sr-only">
 								Email address
 							</label>
@@ -37,7 +106,7 @@ const SignUp = () => {
 								name="email"
 								type="email"
 								{...register('email')}
-								className={`appearance-none rounded relative block w-full px-3 py-2 my-5 border ${
+								className={`appearance-none rounded relative block w-full px-3 py-2 mt-5 border ${
 									errors?.email ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Email address"
@@ -58,7 +127,7 @@ const SignUp = () => {
 								type="password"
 								autoComplete="current-password"
 								{...register('password')}
-								className={`appearance-none rounded relative block w-full px-3 my-5 py-2 border ${
+								className={`appearance-none rounded relative block w-full px-3 mt-5 py-2 border ${
 									errors?.password ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Password"
@@ -79,7 +148,7 @@ const SignUp = () => {
 								type="password"
 								autoComplete="current-password"
 								{...register('confirmPassword')}
-								className={`appearance-none rounded relative block w-full px-3 py-2 border ${
+								className={`appearance-none rounded relative block w-full px-3 mt-5 py-2 border ${
 									errors?.confirmPassword ? 'border-red-500' : 'border-gray-300'
 								} placeholder-gray-500 text-gray-900  focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm`}
 								placeholder="Confirm Password"
@@ -100,6 +169,9 @@ const SignUp = () => {
 						</button>
 					</div>
 				</form>
+				<div className="flex justify-center">
+					<p className="text-red-500">{err}</p>
+				</div>
 				<div className="flex justify-center">
 					<p>Already have an account?</p>&nbsp;&nbsp;
 					<a href="/login">Login</a>
