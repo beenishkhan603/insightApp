@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaHome, FaSignOutAlt, FaWindowClose } from 'react-icons/fa';
 import { MdFavorite } from 'react-icons/md';
+import Avatar from 'react-avatar';
 
 const Navbar = () => {
 	const navigate = useNavigate();
@@ -9,9 +10,9 @@ const Navbar = () => {
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
 
 	const menuItems = [
-		{ icon: <FaHome size={25} className="mr-8" />, text: 'Dashboard' },
-		{ icon: <MdFavorite size={25} className="mr-8" />, text: 'Products' },
-		{ icon: <FaSignOutAlt size={25} className="mr-8" />, text: 'Logout' },
+		{ icon: <FaHome size={20} className="mr-8" />, text: 'Dashboard' },
+		{ icon: <MdFavorite size={20} className="mr-8" />, text: 'Products' },
+		{ icon: <FaSignOutAlt size={20} className="mr-8" />, text: 'Logout' },
 	];
 
 	const handleProfileClick = () => {
@@ -33,8 +34,11 @@ const Navbar = () => {
 		<div className="w-full mx-auto flex justify-between items-center py-4 px-8 md:px-20 lg:px-20 shadow-sm">
 			{/* Left side */}
 			<div className="flex items-center">
-				<div onClick={() => setNavOpen(!isNavOpen)} className="cursor-pointer">
-					<FaBars size={30} />
+				<div
+					onClick={() => setNavOpen(!isNavOpen)}
+					className="cursor-pointer mr-10"
+				>
+					<FaBars size={20} />
 				</div>
 				<h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">
 					Shila <span className="font-bold">Insights</span>
@@ -43,11 +47,12 @@ const Navbar = () => {
 
 			{/* Profile button and dropdown */}
 			<div className="relative">
-				<img
+				<Avatar
 					onClick={handleProfileClick}
-					className="w-10 h-10 rounded-full cursor-pointer"
-					src="/docs/images/people/profile-picture-5.jpg"
-					alt="User dropdown"
+					className="cursor-pointer text-base"
+					size="50"
+					name={JSON.parse(localStorage.getItem('user'))?.email || 'User'}
+					round
 				/>
 
 				{/* User Dropdown */}

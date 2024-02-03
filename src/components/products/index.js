@@ -104,59 +104,61 @@ const Product = () => {
 				</div>
 				{/* Product Table */}
 				{products?.length > 0 ? (
-					<table className="mx-auto min-w-full bg-white border border-gray-300">
-						<thead>
-							<tr>
-								<th className="py-2 px-4 border-b">Name</th>
-								<th className="py-2 px-4 border-b">Description</th>
-								<th className="py-2 px-4 border-b">Category</th>
-								<th className="py-2 px-4 border-b">Price</th>
-								<th className="py-2 px-4 border-b">Manufacturer</th>
-								<th className="py-2 px-4 border-b">Stock Quantity</th>
-								<th className="py-2 px-4 border-b">Actions</th>
-							</tr>
-						</thead>
-						<tbody>
-							{products.map((product) => (
-								<tr key={product._id}>
-									<td className="py-2 px-4 border-b text-center">
-										{product.name}
-									</td>
-									<td className="py-2 px-4 border-b text-center">
-										{product.description}
-									</td>
-									<td className="py-2 px-4 border-b text-center">
-										{product.category}
-									</td>
-									<td className="py-2 px-4 border-b text-center">
-										{product.price}
-									</td>
-									<td className="py-2 px-4 border-b text-center">
-										{product.manufacturer}
-									</td>
-									<td className="py-2 px-4 border-b text-center">
-										{product.stockQuantity}
-									</td>
-									<td className="py-2 px-4 border-b text-center">
-										<button
-											onClick={() => handleEdit(product._id)}
-											className="text-blue-500 hover:underline"
-										>
-											Edit
-										</button>{' '}
-										&nbsp;&nbsp;
-										<button
-											onClick={() => handleDeleteClick(product)}
-											className="text-red-500 hover:underline"
-										>
-											Delete
-										</button>
-										{/* Add edit icon/button here if needed */}
-									</td>
+					<div className="mx-auto overflow-x-auto">
+						<table className="mx-auto min-w-full bg-white border border-gray-300">
+							<thead>
+								<tr>
+									<th className="py-2 px-4 border-b">Name</th>
+									<th className="py-2 px-4 border-b">Description</th>
+									<th className="py-2 px-4 border-b">Category</th>
+									<th className="py-2 px-4 border-b">Price</th>
+									<th className="py-2 px-4 border-b">Manufacturer</th>
+									<th className="py-2 px-4 border-b">Stock Quantity</th>
+									<th className="py-2 px-4 border-b">Actions</th>
 								</tr>
-							))}
-						</tbody>
-					</table>
+							</thead>
+							<tbody>
+								{products.map((product) => (
+									<tr key={product._id}>
+										<td className="py-2 px-4 border-b text-center">
+											{product.name}
+										</td>
+										<td className="py-2 px-4 border-b text-center">
+											{product.description}
+										</td>
+										<td className="py-2 px-4 border-b text-center">
+											{product.category}
+										</td>
+										<td className="py-2 px-4 border-b text-center">
+											{product.price}
+										</td>
+										<td className="py-2 px-4 border-b text-center">
+											{product.manufacturer}
+										</td>
+										<td className="py-2 px-4 border-b text-center">
+											{product.stockQuantity}
+										</td>
+										<td className="py-2 px-4 border-b text-center">
+											<button
+												onClick={() => handleEdit(product._id)}
+												className="text-blue-500 hover:underline"
+											>
+												Edit
+											</button>{' '}
+											&nbsp;&nbsp;
+											<button
+												onClick={() => handleDeleteClick(product)}
+												className="text-red-500 hover:underline"
+											>
+												Delete
+											</button>
+											{/* Add edit icon/button here if needed */}
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
 				) : (
 					<p className="text-gray-500">No data available</p>
 				)}
