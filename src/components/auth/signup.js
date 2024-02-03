@@ -6,6 +6,7 @@ import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { SignUpSchema } from '../../utils/validation';
 import ApiRequest from '../../utils/axioInterceptor';
+import { toast } from 'react-toastify';
 
 const SignUp = () => {
 	const navigate = useNavigate();
@@ -33,6 +34,7 @@ const SignUp = () => {
 				if (data) {
 					const { success, message } = data;
 					if (success) {
+						toast.success('user created successfully');
 						reset();
 					} else {
 						setErr(message);

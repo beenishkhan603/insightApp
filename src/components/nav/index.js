@@ -9,9 +9,9 @@ const Navbar = () => {
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
 
 	const menuItems = [
-		{ icon: <FaHome size={25} className="mr-4" />, text: 'Dashboard' },
-		{ icon: <MdFavorite size={25} className="mr-4" />, text: 'Reviews' },
-		{ icon: <FaSignOutAlt size={25} className="mr-4" />, text: 'Logout' },
+		{ icon: <FaHome size={25} className="mr-8" />, text: 'Dashboard' },
+		{ icon: <MdFavorite size={25} className="mr-8" />, text: 'Products' },
+		{ icon: <FaSignOutAlt size={25} className="mr-8" />, text: 'Logout' },
 	];
 
 	const handleProfileClick = () => {
@@ -21,9 +21,16 @@ const Navbar = () => {
 		navigate('/login');
 		localStorage.clear();
 	};
-
+	const handleNav = (text) => {
+		console.log('text', text, text);
+		if (text.toLowerCase() === 'logout') {
+			handleLogout();
+		} else {
+			navigate(`/${text.toLowerCase()}`);
+		}
+	};
 	return (
-		<div className="max-w-[1640px] mx-auto flex justify-between items-center p-4 shadow-sm">
+		<div className="w-full mx-auto flex justify-between items-center py-4 px-8 md:px-20 lg:px-20 shadow-sm">
 			{/* Left side */}
 			<div className="flex items-center">
 				<div onClick={() => setNavOpen(!isNavOpen)} className="cursor-pointer">
@@ -83,7 +90,7 @@ const Navbar = () => {
 								onClick={handleLogout}
 								className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
 							>
-								Sign out
+								Logout
 							</div>
 						</div>
 					</div>
@@ -101,21 +108,24 @@ const Navbar = () => {
 
 					{/* Side drawer menu */}
 					<div
-						className={`fixed top-0 left-0 w-[300px] h-screen bg-white z-10 duration-300 ${
+						className={`fixed top-0 left-0 w-[300px] h-screen bg-white z-10 duration-300  ${
 							isNavOpen ? '' : 'left-[-100%]'
 						}`}
 					>
-						<FaWindowClose
-							onClick={() => setNavOpen(false)}
-							size={30}
-							className="absolute right-4 top-4 cursor-pointer"
-						/>
-						<nav>
+						<div className="mb-35">
+							<FaWindowClose
+								onClick={() => setNavOpen(false)}
+								size={20}
+								className="absolute right-4 top-4 cursor-pointer "
+							/>
+						</div>
+						<nav className="mt-35">
 							<ul className="flex flex-col p-4 text-gray-800">
 								{menuItems.map(({ icon, text }, index) => (
 									<li
 										key={index}
-										className="text-xl flex cursor-pointer w-[50%] rounded-full mx-auto p-2 hover:text-white hover:bg-black"
+										className="text-xl flex cursor-pointer w-[100%] rounded-full mx-auto p-2 hover:text-white hover:bg-black"
+										onClick={() => handleNav(text)}
 									>
 										{icon} {text}
 									</li>

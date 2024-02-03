@@ -40,5 +40,27 @@ const SignInSchema = Yup.object().shape({
 
 	password: Yup.string().required('Password is required'),
 });
-
-export { SignUpSchema, SignInSchema };
+const ProductSchema = Yup.object().shape({
+	name: Yup.string()
+		.required('Name is required')
+		.min(2, 'Too Short!')
+		.max(50, 'Too Long!'),
+	description: Yup.string()
+		.required('Description is required')
+		.min(10, 'Too Short!')
+		.max(250, 'Too Long!'),
+	category: Yup.string()
+		.required('Category is required')
+		.min(2, 'Too Short!')
+		.max(50, 'Too Long!'),
+	price: Yup.number()
+		.required('Price is required')
+		.min(1)
+		.typeError('price must be a number'),
+	manufacturer: Yup.string()
+		.required('Manufacturer is required')
+		.min(2, 'Too Short!')
+		.max(50, 'Too Long!'),
+	stockQuantity: Yup.number().required('Stock Quantity is required').min(1),
+});
+export { SignUpSchema, SignInSchema, ProductSchema };
