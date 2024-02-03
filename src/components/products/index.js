@@ -178,6 +178,7 @@ const Product = () => {
 						onClose={() => setShowProductPopup(false)}
 						isEdit={isEdit}
 						isOpen={showProductPopup}
+						setProducts={setProducts}
 					/>
 				) : (
 					''

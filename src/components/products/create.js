@@ -8,7 +8,7 @@ import { ProductSchema } from '../../utils/validation';
 import ApiRequest from '../../utils/axioInterceptor';
 import { toast } from 'react-toastify';
 
-const ProductModal = ({ isOpen, onClose, onCreateProduct, isEdit }) => {
+const ProductModal = ({ isOpen, onClose, setProducts, isEdit }) => {
 	const navigate = useNavigate();
 	const [file, setFile] = useState(null);
 	const [previewImage, setPreviewImage] = useState(null);
@@ -17,12 +17,15 @@ const ProductModal = ({ isOpen, onClose, onCreateProduct, isEdit }) => {
 		handleSubmit,
 		formState: { errors },
 		reset,
+		setValue,
 	} = useForm({
 		resolver: yupResolver(ProductSchema),
 	});
 
 	const onDrop = (acceptedFiles) => {
+		console.log(acceptedFiles);
 		const selectedFile = acceptedFiles[0];
+		setValue('image', URL.createObjectURL(selectedFile));
 		setFile(selectedFile);
 		const reader = new FileReader();
 		reader.onload = () => {
@@ -31,7 +34,15 @@ const ProductModal = ({ isOpen, onClose, onCreateProduct, isEdit }) => {
 		reader.readAsDataURL(selectedFile);
 	};
 
-	const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
+		onDrop,
+		maxFiles: 1,
+		accept: {
+			'image/jpeg': [],
+			'image/jpg': [],
+			'image/png': [],
+		},
+	});
 
 	const handleCreateProduct = async (product) => {
 		try {
@@ -67,6 +78,7 @@ const ProductModal = ({ isOpen, onClose, onCreateProduct, isEdit }) => {
 					if (data) {
 						const { success, message } = data;
 						if (success) {
+							setProducts((prev) => [...prev, { ...data?.data }]);
 							toast.success(message);
 						} else {
 							toast.error(message);
@@ -219,7 +231,7 @@ const ProductModal = ({ isOpen, onClose, onCreateProduct, isEdit }) => {
 										isDragActive ? 'active' : ''
 									} border-dashed border-2 border-gray-300`}
 								>
-									<input {...getInputProps()} />
+									<input {...getInputProps()} {...register('image')} />
 									{isDragActive ? (
 										<p>Drop the image here</p>
 									) : (
@@ -232,6 +244,11 @@ const ProductModal = ({ isOpen, onClose, onCreateProduct, isEdit }) => {
 										alt="Preview"
 										className="mt-2 max-w-full h-auto"
 									/>
+								)}
+								{errors.image && (
+									<p className="text-red-500 text-xs mt-1">
+										{errors.image.message}
+									</p>
 								)}
 							</div>
 

@@ -62,5 +62,6 @@ const ProductSchema = Yup.object().shape({
 		.min(2, 'Too Short!')
 		.max(50, 'Too Long!'),
 	stockQuantity: Yup.number().required('Stock Quantity is required').min(1),
+	image: Yup.string().required('Image is required'),
 });
 export { SignUpSchema, SignInSchema, ProductSchema };
