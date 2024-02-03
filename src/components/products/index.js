@@ -54,25 +54,6 @@ const Product = () => {
 	const handleCreate = async () => {
 		setIsEdit(false);
 		setShowProductPopup(true);
-
-		// try {
-		// 	const response = await ApiRequest.post(
-		// 		`${process.env.REACT_APP_BACKEND_URL}/product`,
-		// 		{
-		// 			headers: {
-		// 				Authorization: ` ${localStorage.getItem('token')}`,
-		// 			},
-		// 		}
-		// 	);
-		// 	if (response) {
-		// 	}
-		// } catch (e) {
-		// 	console.log('e', e);
-		// 	if (e?.response?.status == '401') {
-		// 		localStorage.clear();
-		// 		navigate('/login');
-		// 	}
-		// }
 	};
 	const handleProductData = async () => {
 		try {
@@ -112,11 +93,18 @@ const Product = () => {
 		<>
 			<Navbar />
 			<div className="container mx-auto p-4">
-				<h1 className="text-2xl font-bold mb-4">Products</h1>
-				<button onClick={handleCreate}>Create</button>
+				<div className="container mx-auto p-4 flex justify-between items-center">
+					<h1 className="text-2xl font-bold mb-4">Products</h1>
+					<button
+						onClick={handleCreate}
+						className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600"
+					>
+						Create
+					</button>
+				</div>
 				{/* Product Table */}
 				{products?.length > 0 ? (
-					<table className="min-w-full bg-white border border-gray-300">
+					<table className="mx-auto min-w-full bg-white border border-gray-300">
 						<thead>
 							<tr>
 								<th className="py-2 px-4 border-b">Name</th>
@@ -131,18 +119,28 @@ const Product = () => {
 						<tbody>
 							{products.map((product) => (
 								<tr key={product._id}>
-									<td className="py-2 px-4 border-b">{product.name}</td>
-									<td className="py-2 px-4 border-b">{product.description}</td>
-									<td className="py-2 px-4 border-b">{product.category}</td>
-									<td className="py-2 px-4 border-b">{product.price}</td>
-									<td className="py-2 px-4 border-b">{product.manufacturer}</td>
-									<td className="py-2 px-4 border-b">
+									<td className="py-2 px-4 border-b text-center">
+										{product.name}
+									</td>
+									<td className="py-2 px-4 border-b text-center">
+										{product.description}
+									</td>
+									<td className="py-2 px-4 border-b text-center">
+										{product.category}
+									</td>
+									<td className="py-2 px-4 border-b text-center">
+										{product.price}
+									</td>
+									<td className="py-2 px-4 border-b text-center">
+										{product.manufacturer}
+									</td>
+									<td className="py-2 px-4 border-b text-center">
 										{product.stockQuantity}
 									</td>
-									<td className="py-2 px-4 border-b">
+									<td className="py-2 px-4 border-b text-center">
 										<button
 											onClick={() => handleEdit(product._id)}
-											className="text-red-500 hover:underline"
+											className="text-blue-500 hover:underline"
 										>
 											Edit
 										</button>{' '}
