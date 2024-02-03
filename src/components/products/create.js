@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { useDropzone } from 'react-dropzone';
@@ -8,7 +8,15 @@ import { ProductSchema } from '../../utils/validation';
 import ApiRequest from '../../utils/axioInterceptor';
 import { toast } from 'react-toastify';
 
-const ProductModal = ({ isOpen, onClose, setProducts, isEdit }) => {
+const ProductModal = ({
+	isOpen,
+	onClose,
+	setProducts,
+	isEdit,
+	setIsEdit,
+	selectedProduct,
+	setSelectedProduct,
+}) => {
 	const navigate = useNavigate();
 	const [file, setFile] = useState(null);
 	const [previewImage, setPreviewImage] = useState(null);
@@ -23,7 +31,6 @@ const ProductModal = ({ isOpen, onClose, setProducts, isEdit }) => {
 	});
 
 	const onDrop = (acceptedFiles) => {
-		console.log(acceptedFiles);
 		const selectedFile = acceptedFiles[0];
 		setValue('image', URL.createObjectURL(selectedFile));
 		setFile(selectedFile);
@@ -46,58 +53,103 @@ const ProductModal = ({ isOpen, onClose, setProducts, isEdit }) => {
 
 	const handleCreateProduct = async (product) => {
 		try {
-			if (isEdit) {
-			} else {
-				let data = new FormData();
-				const {
-					name,
-					description,
-					category,
-					manufacturer,
-					stockQuantity,
-					price,
-				} = product;
-				data.append('name', name);
-				data.append('description', description);
-				data.append('category', category);
-				data.append('manufacturer', manufacturer);
-				data.append('stockQuantity', stockQuantity);
-				data.append('image', file);
-				data.append('price', price);
-				const response = await ApiRequest.post(
-					`${process.env.REACT_APP_BACKEND_URL}/product`,
-					data,
-					{
-						headers: {
-							Authorization: ` ${localStorage.getItem('token')}`,
-						},
-					}
-				);
-				if (response) {
-					const { data } = response;
-					if (data) {
-						const { success, message } = data;
-						if (success) {
-							setProducts((prev) => [...prev, { ...data?.data }]);
-							toast.success(message);
+			let data = new FormData();
+			const {
+				name,
+				description,
+				category,
+				manufacturer,
+				stockQuantity,
+				price,
+			} = product;
+
+			data.append('name', name);
+			data.append('description', description);
+			data.append('category', category);
+			data.append('manufacturer', manufacturer);
+			data.append('stockQuantity', stockQuantity);
+			data.append('image', file);
+			data.append('price', price);
+
+			const url = isEdit
+				? `${process.env.REACT_APP_BACKEND_URL}/product/${selectedProduct._id}`
+				: `${process.env.REACT_APP_BACKEND_URL}/product`;
+
+			const response = await ApiRequest[isEdit ? 'put' : 'post'](url, data, {
+				headers: {
+					Authorization: ` ${localStorage.getItem('token')}`,
+				},
+			});
+
+			if (response) {
+				const { data } = response;
+				if (data) {
+					const { success, message } = data;
+					if (success) {
+						if (isEdit) {
+							console.log('isEdit');
+							setProducts((prev) =>
+								prev.map((prevProduct) =>
+									prevProduct._id === selectedProduct._id
+										? { ...data?.data }
+										: prevProduct
+								)
+							);
 						} else {
-							toast.error(message);
+							console.log('in else');
+							setProducts((prev) => [...prev, { ...data?.data }]);
 						}
+						setProducts((prev) => [...prev, { ...data?.data }]);
+						toast.success(message);
+						reset();
+						setIsEdit(false);
+						setSelectedProduct(null);
+						onClose();
+					} else {
+						toast.error(message);
 					}
 				}
 			}
-
-			// Reset the form and close the modal
-			reset();
-			onClose();
 		} catch (e) {
-			if (e?.response?.status == '401') {
+			if (e?.response?.status === '401') {
 				localStorage.clear();
 				navigate('/login');
 			}
 		}
 	};
 
+	useEffect(() => {
+		// Set form values when selectedProduct is not null
+		if (selectedProduct) {
+			const {
+				name,
+				description,
+				category,
+				manufacturer,
+				stockQuantity,
+				price,
+				image,
+			} = selectedProduct;
+
+			setValue('name', name);
+			setValue('description', description);
+			setValue('category', category);
+			setValue('manufacturer', manufacturer);
+			setValue('stockQuantity', stockQuantity);
+			setValue('price', price);
+
+			if (image) {
+				setFile(null);
+				setValue(
+					'image',
+					`${process.env.REACT_APP_BACKEND_URL}/uploads/${image}`
+				);
+				setPreviewImage(
+					`${process.env.REACT_APP_BACKEND_URL}/uploads/${image}`
+				);
+			}
+		}
+	}, [selectedProduct, setValue]);
 	return (
 		<div
 			className={`fixed z-10 inset-0 overflow-y-auto ${
@@ -231,7 +283,7 @@ const ProductModal = ({ isOpen, onClose, setProducts, isEdit }) => {
 										isDragActive ? 'active' : ''
 									} border-dashed border-2 border-gray-300`}
 								>
-									<input {...getInputProps()} {...register('image')} />
+									<input {...getInputProps()} />
 									{isDragActive ? (
 										<p>Drop the image here</p>
 									) : (
@@ -240,6 +292,7 @@ const ProductModal = ({ isOpen, onClose, setProducts, isEdit }) => {
 								</div>
 								{previewImage && (
 									<img
+										{...register('image')}
 										src={previewImage}
 										alt="Preview"
 										className="mt-2 max-w-full h-auto"

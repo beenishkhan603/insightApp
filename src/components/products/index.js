@@ -38,6 +38,7 @@ const Product = () => {
 						setProducts(
 							products.filter((product) => product._id !== selectedProduct._id)
 						);
+						setSelectedProduct(null);
 						toast.success(message);
 					}
 				}
@@ -50,7 +51,11 @@ const Product = () => {
 			}
 		}
 	};
-	const handleEdit = (id) => {};
+	const handleEdit = (product) => {
+		setIsEdit(true);
+		setSelectedProduct(product);
+		setShowProductPopup(true);
+	};
 	const handleCreate = async () => {
 		setIsEdit(false);
 		setShowProductPopup(true);
@@ -108,6 +113,7 @@ const Product = () => {
 						<table className="mx-auto min-w-full bg-white border border-gray-300">
 							<thead>
 								<tr>
+									<th className="py-2 px-4 border-b">Image</th>
 									<th className="py-2 px-4 border-b">Name</th>
 									<th className="py-2 px-4 border-b">Description</th>
 									<th className="py-2 px-4 border-b">Category</th>
@@ -120,6 +126,13 @@ const Product = () => {
 							<tbody>
 								{products.map((product) => (
 									<tr key={product._id}>
+										<td className="py-2 px-4 border-b text-center">
+											<img
+												src={`${process.env.REACT_APP_BACKEND_URL}/uploads/${product.image}`}
+												alt="product"
+												className="w-10 h-10"
+											/>
+										</td>
 										<td className="py-2 px-4 border-b text-center">
 											{product.name}
 										</td>
@@ -140,7 +153,7 @@ const Product = () => {
 										</td>
 										<td className="py-2 px-4 border-b text-center">
 											<button
-												onClick={() => handleEdit(product._id)}
+												onClick={() => handleEdit(product)}
 												className="text-blue-500 hover:underline"
 											>
 												Edit
@@ -179,6 +192,9 @@ const Product = () => {
 						isEdit={isEdit}
 						isOpen={showProductPopup}
 						setProducts={setProducts}
+						setIsEdit={setIsEdit}
+						selectedProduct={selectedProduct}
+						setSelectedProduct={setSelectedProduct}
 					/>
 				) : (
 					''
