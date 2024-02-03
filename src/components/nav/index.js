@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { FaBars, FaHome, FaSignOutAlt, FaWindowClose } from 'react-icons/fa';
-import { MdFavorite, MdHelp } from 'react-icons/md';
+import { MdFavorite } from 'react-icons/md';
 
 const Navbar = () => {
+	const navigate = useNavigate();
 	const [isNavOpen, setNavOpen] = useState(false);
 	const [isDropdownOpen, setDropdownOpen] = useState(false);
 
@@ -14,6 +16,10 @@ const Navbar = () => {
 
 	const handleProfileClick = () => {
 		setDropdownOpen(!isDropdownOpen);
+	};
+	const handleLogout = () => {
+		navigate('/login');
+		localStorage.clear();
 	};
 
 	return (
@@ -41,45 +47,44 @@ const Navbar = () => {
 				{isDropdownOpen && (
 					<div className="absolute right-0 mt-2 w-44 bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600">
 						<div className="px-4 py-3 text-sm text-gray-900 dark:text-white">
-							<div>Bonnie Green</div>
-							<div className="font-medium truncate">name@flowbite.com</div>
+							<div>
+								{localStorage.getItem('user') &&
+									`${JSON.parse(localStorage.getItem('user')).firstname} ${
+										JSON.parse(localStorage.getItem('user')).lastname
+									}`}
+							</div>
+							<div className="font-medium truncate">
+								{JSON.parse(localStorage.getItem('user'))?.email}
+							</div>
 						</div>
 						<ul
 							className="py-2 text-sm text-gray-700 dark:text-gray-200"
 							aria-labelledby="avatarButton"
 						>
 							<li>
-								<a
-									href="#"
+								<Link
+									to="/"
 									className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 								>
 									Dashboard
-								</a>
+								</Link>
 							</li>
 							<li>
-								<a
-									href="#"
+								<Link
+									href="/setting"
 									className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
 								>
 									Settings
-								</a>
-							</li>
-							<li>
-								<a
-									href="#"
-									className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
-								>
-									Earnings
-								</a>
+								</Link>
 							</li>
 						</ul>
 						<div className="py-1">
-							<a
-								href="#"
+							<div
+								onClick={handleLogout}
 								className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
 							>
 								Sign out
-							</a>
+							</div>
 						</div>
 					</div>
 				)}

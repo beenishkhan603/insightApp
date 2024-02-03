@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 
 import { SignUpSchema } from '../../utils/validation';
@@ -202,7 +202,7 @@ const SignUp = () => {
 				)}
 				<div className="flex justify-center">
 					<p>Already have an account?</p>&nbsp;&nbsp;
-					<a href="/login">Login</a>
+					<Link to="/login">Login</Link>
 				</div>
 			</div>
 		</div>

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
@@ -29,10 +29,18 @@ const Login = () => {
 			if (response) {
 				const { data } = response;
 				if (data) {
-					const { success, message, accessToken } = data;
+					const { success, message, accessToken, user } = data;
 					if (success) {
 						reset();
 						localStorage.setItem('token', accessToken);
+						localStorage.setItem(
+							'user',
+							JSON.stringify({
+								firstname: user?.firstname,
+								lastname: user?.lastname,
+								email: user?.email,
+							})
+						);
 						navigate('/dashboard');
 					} else {
 						setErr(message);
@@ -40,8 +48,11 @@ const Login = () => {
 				}
 			}
 		} catch (e) {
-			setErr('Something went worng. Please try again later');
-			reset();
+			if (e?.response?.data?.message) {
+				setErr(e?.response?.data?.message);
+			} else {
+				setErr('Something went worng. Please try again later');
+			}
 		}
 	};
 
@@ -132,7 +143,7 @@ const Login = () => {
 				)}
 				<div className="flex justify-center">
 					<p>Dont have an account?</p> &nbsp;&nbsp;
-					<a href="/signup">Sign up</a>
+					<Link to="/signup">Sign up</Link>
 				</div>
 			</div>
 		</div>
