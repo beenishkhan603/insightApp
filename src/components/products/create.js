@@ -87,7 +87,6 @@ const ProductModal = ({
 					const { success, message } = data;
 					if (success) {
 						if (isEdit) {
-							console.log('isEdit');
 							setProducts((prev) =>
 								prev.map((prevProduct) =>
 									prevProduct._id === selectedProduct._id
@@ -96,10 +95,8 @@ const ProductModal = ({
 								)
 							);
 						} else {
-							console.log('in else');
 							setProducts((prev) => [...prev, { ...data?.data }]);
 						}
-						setProducts((prev) => [...prev, { ...data?.data }]);
 						toast.success(message);
 						reset();
 						setIsEdit(false);
@@ -111,7 +108,7 @@ const ProductModal = ({
 				}
 			}
 		} catch (e) {
-			if (e?.response?.status === '401') {
+			if (e?.response?.status === 401) {
 				localStorage.clear();
 				navigate('/login');
 			}
@@ -307,7 +304,12 @@ const ProductModal = ({
 
 							<div className="flex justify-end mt-5">
 								<button
-									onClick={() => onClose()}
+									onClick={() => {
+										setSelectedProduct(null);
+										setIsEdit(false);
+										reset();
+										onClose();
+									}}
 									className="mr-4 px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md"
 								>
 									Cancel
