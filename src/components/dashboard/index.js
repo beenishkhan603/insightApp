@@ -49,32 +49,32 @@ const Dashboard = () => {
 			<div className="container mx-auto p-4">
 				<div className="mt-8">
 					<h2 className="text-2xl font-bold mb-4">Dashboard</h2>
-					<div class="grid grid-cols-1 gap-4  mt-8 sm:grid-cols-6 justify-center">
-						<div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
-							<div class="p-6 bg-green-400">
+					<div className="grid grid-cols-1 gap-4  mt-8 sm:grid-cols-6 justify-center">
+						<div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
+							<div className="p-6 bg-green-400">
 								<FaUser className="text-3xl mr-2" color="#fff" />
 							</div>
-							<div class="px-4 text-gray-700">
-								<h3 class="text-2 tracking-wider font-semibold">
+							<div className="px-4 text-gray-700">
+								<h3 className="text-2 tracking-wider font-semibold">
 									Total Member
 								</h3>
-								<p class="text-3xl">{overallStats.totalUsers}</p>
+								<p className="text-3xl">{overallStats.totalUsers}</p>
 							</div>
 						</div>
-						<div class="flex items-center bg-white border rounded-sm overflow-hidden shadow">
-							<div class="p-6 bg-blue-400">
+						<div className="flex items-center bg-white border rounded-sm overflow-hidden shadow">
+							<div className="p-6 bg-blue-400">
 								<FaBox className="text-3xl mr-2" color="#fff" />
 							</div>
-							<div class="px-4 text-gray-700">
-								<h3 class="text-2 tracking-wider font-semibold">
+							<div className="px-4 text-gray-700">
+								<h3 className="text-2 tracking-wider font-semibold">
 									Total Products
 								</h3>
-								<p class="text-3xl">{overallStats?.totalProducts}</p>
+								<p className="text-3xl">{overallStats?.totalProducts}</p>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div className="grid grid-cols-1 md:grid-col-2 lg:grid-col-2 gap-4 mt-20">
+				<div className="grid grid-cols-1 gap-4  mt-8 sm:grid-cols-2 justify-center">
 					<div>
 						<LineGraph />
 					</div>
