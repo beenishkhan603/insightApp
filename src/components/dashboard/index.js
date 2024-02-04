@@ -74,7 +74,7 @@ const Dashboard = () => {
 						</div>
 					</div>
 				</div>
-				<div className="grid grid-cols-2 gap-4 mt-20">
+				<div className="grid grid-cols-1 md:grid-col-2 lg:grid-col-2 gap-4 mt-20">
 					<div>
 						<LineGraph />
 					</div>

@@ -41,7 +41,7 @@ const Navbar = () => {
 					<FaBars size={20} />
 				</div>
 				<h1 className="text-2xl sm:text-3xl lg:text-4xl px-2">
-					Shila <span className="font-bold">Insights</span>
+					Sila <span className="font-bold">Insights</span>
 				</h1>
 			</div>
 
@@ -117,19 +117,19 @@ const Navbar = () => {
 							isNavOpen ? '' : 'left-[-100%]'
 						}`}
 					>
-						<div className="mb-35">
+						<div>
 							<FaWindowClose
 								onClick={() => setNavOpen(false)}
 								size={20}
 								className="absolute right-4 top-4 cursor-pointer "
 							/>
 						</div>
-						<nav className="mt-35">
-							<ul className="flex flex-col p-4 text-gray-800">
+						<nav className="mt-10">
+							<ul className="flex flex-col p-4 text-gray-800 mt-35">
 								{menuItems.map(({ icon, text }, index) => (
 									<li
 										key={index}
-										className="text-xl flex cursor-pointer w-[100%] rounded-full mx-auto p-2 hover:text-white hover:bg-black"
+										className="text-xl flex cursor-pointer w-[100%] rounded-full mx-auto p-2 hover:text-white hover:bg-gray-200"
 										onClick={() => handleNav(text)}
 									>
 										{icon} {text}
